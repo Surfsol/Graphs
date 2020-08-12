@@ -79,24 +79,27 @@ class Graph:
         # make a set to track if been there before
         visited = set() 
         # while stack not empty
-        while s.size():
+        while s.size() > 0:
         # pop off top of stack, this is current_node
             current_node = s.pop()
         # if have not visited before, mark as visited
             if current_node not in visited:
+                print(current_node)
                 visited.add(current_node)
         # Add neighbors to top of stack
                 neighbors = self.get_neighbors(current_node)
                 for neighbor in neighbors:
                     s.push(neighbor)
 
-    def dft_recursive(self, starting_vertex, visited=set()):
+    def dft_recursive(self, starting_vertex, visited=None):
         """
         Print each vertex in depth-first order
         beginning from starting_vertex.
 
         This should be done using recursion.
         """
+        if visited is None:
+            visited = set()
         #mark vertex as visited
         visited.add(starting_vertex)
         print(starting_vertex)
@@ -145,15 +148,44 @@ class Graph:
                     #add to que
                     q.enqueue(path_copy)
             
-    def dfs(self, starting_vertex, destination_vertex):
+    def dfs(self, vertex, destination_vertex):
         """
         Return a list containing a path from
         starting_vertex to destination_vertex in
         depth-first order.
         """
-        pass  # TODO
+        
+        visited = set()
+        
+        visited.add(vertex)
+        path = [vertex]
 
-    def dfs_recursive(self, vertex, destination_vertex, visited=set(), path):
+        if vertex == destination_vertex:
+            return path
+        s = Stack()
+        s.push(vertex)
+        
+       
+        while s.size() > 0:
+            current_node = s.pop()
+            if current_node == destination_vertex:
+                return path
+            else:
+                if current_node not in visited:
+                    visited.add(current_node)
+                    path.append(current_node)
+                    #put neighbors on top of stack
+                neighbors = self.get_neighbors(current_node)
+                for neighbor in neighbors:
+                    s.push(neighbor)
+
+                    
+
+
+        
+          
+
+    def dfs_recursive(self, vertex, destination_vertex, visited=None, path=None):
         """
         Return a list containing a path from
         starting_vertex to destination_vertex in
@@ -162,6 +194,10 @@ class Graph:
         This should be done using recursion.
 
         """
+        if path == None: 
+            path = [vertex]
+        if visited is None:
+            visited = set()
         #mark out node as visited
         visited.add(vertex)
         #check if target node. if so return path
@@ -174,7 +210,7 @@ class Graph:
         for  neighbor in neighbors:
             #check if visited
             if neighbor not in visited:
-                result = self.dfs_recursive(neighbor, destination_vertex, path + [neighbor])
+                result = self.dfs_recursive(neighbor, destination_vertex, visited, path + [neighbor])
                 if result is not None:
                     return result
         
